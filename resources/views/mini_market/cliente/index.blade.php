@@ -50,7 +50,7 @@
                       
 
                         {{-- Botón ver detalles --}}
-                        <flux:button href="{{ route('carrito.show', $stock->id) }}" variant="primary"
+                        <flux:button href="{{ route('catalogo.show', $stock->id) }}" variant="primary"
                             class="w-full font-semibold py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 mt-2">
                             📄 Ver detalles
                         </flux:button>
@@ -59,7 +59,6 @@
             @empty
                 <div class="text-center py-12">
                     <flux:heading size="xl" class="text-gray-500 mb-4">No hay productos disponibles</flux:heading>
-                    <flux:button href="{{ route('stock.index') }}" variant="primary">Ver inventario</flux:button>
                 </div>
             @endforelse
         </div>

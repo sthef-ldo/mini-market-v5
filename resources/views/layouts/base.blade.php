@@ -23,6 +23,18 @@
                     wire:navigate>
                     {{ __('Dashboard') }}
                 </flux:sidebar.item>
+
+                <flux:sidebar.item icon="document-text" :href="route('categorias.index')" :current="request()->routeIs('categorias.index')"
+                    wire:navigate>
+                    {{ __('Categorías') }}
+                </flux:sidebar.item>
+
+                  <flux:sidebar.item icon="archive-box" :href="route('stock.index')" :current="request()->routeIs('stock.index')"
+                    wire:navigate>
+                    {{ __('Stock') }}
+                </flux:sidebar.item>
+
+
             </flux:sidebar.group>
         </flux:sidebar.nav>
 

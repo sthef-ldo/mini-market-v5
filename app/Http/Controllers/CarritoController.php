@@ -3,40 +3,27 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\Carrito;
-use App\Models\Stock;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 
 class CarritoController extends Controller
 {
-    public function index()
-    {
-        $stocks = Stock::all();
-        return view('mini_market.cliente.index', compact('stocks'));
-    }
 
-    public function show($stock)
-    {
-        $stock = Stock::findOrFail($stock);
-        return view('mini_market.cliente.show', compact('stock'));
-    }
 
     //mostrar datos del carrito funciona
     public function carrito()
     {
         $user = Auth::user();  // Automáticamente sabe quién eres
-        $productos = Carrito::with('stocks')
-            ->where('user_id', $user->id)  // Filtra por TU user_id
-            ->first();
-        return view('mini_market.cliente.carrito', compact('productos', 'user'));
+        $carritos = Carrito::with('stocks')->where('user_id', $user->id)->get();
+        return view('mini_market.cliente.carrito', compact('carritos', 'user'));
     }
 
 
 
-    public function guardar(Request $request)
-    {
+    public function guardar(Request $request) {
         // Validar
         $request->validate([
             'cantidad' => 'required|integer|min:1',
@@ -52,14 +39,49 @@ class CarritoController extends Controller
             ]);
         }
 
-        // Agregar el producto al carrito
-        $carrito->stocks()->attach($request->stock_id, [
-            'cantidad' => $request->cantidad,
-        ]);
+        $stockId = $request->stock_id;
+        $cantidad = $request->cantidad;
+
+        // existe el producto en el carrito? Si sí, sumamos cantidad. Si no, lo agrega como nuevo.
+        $existe = $carrito->stocks()->where('stock_id', $stockId)->exists();
+
+        if ($existe) {
+            // **SUMAR CANTIDAD si ya existe**
+            $carrito->stocks()->updateExistingPivot($stockId, [
+                'cantidad' => DB::raw('cantidad + ' . $cantidad)
+            ]);
+        } else {
+            // **AGREGAR NUEVO** solo si no existe
+            $carrito->stocks()->attach($stockId, [
+                'cantidad' => $cantidad,
+            ]);
+        }
 
         return response()->json([
-            'message' => 'Producto agregado al carrito correctamente',
+            'message' => 'Producto actualizado en carrito correctamente',
             'data'    => $request->all(),
         ]);
     }
+
+    public function eliminar($stockId) {
+        $user = Auth::user();
+        $carrito = Carrito::where('user_id', $user->id)->first();
+
+        if ($carrito) {
+            $carrito->stocks()->detach($stockId);
+            return response()->json(['message' => 'Producto eliminado del carrito']);
+        }
+
+        return response()->json(['message' => 'Carrito no encontrado'], 404);
+    }
+
+    public function procesarVenta() {
+        $user = Auth::user();
+        $carrito = Carrito::where('user_id', $user->id)->first();
+        if ($carrito) {
+            $carrito->delete(); // Esto marca el carrito como eliminado (soft delete)
+        }
+        return response()->json(['message' => 'Venta procesada correctamente']);
+    }
+
 }

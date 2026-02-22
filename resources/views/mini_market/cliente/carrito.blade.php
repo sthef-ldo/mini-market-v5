@@ -1,26 +1,102 @@
 @extends('layouts.base_2')
 
 @section('content')
+    <flux:heading size="lg">Carrito de Compras</flux:heading>
+
+
     <flux:table>
         <flux:table.columns>
             <flux:table.column>Num</flux:table.column>
             <flux:table.column>Producto</flux:table.column>
             <flux:table.column>Cantidad</flux:table.column>
             <flux:table.column>precio</flux:table.column>
+            <flux:table.column>Total</flux:table.column>
             <flux:table.column>Agregado</flux:table.column>
+            <flux:table.column>Eliminar</flux:table.column>
         </flux:table.columns>
 
         <flux:table.rows>
-            @foreach ($productos->stocks as $producto)
-                <flux:table.row>
-                    <flux:table.cell>{{ $loop->iteration }}</flux:table.cell>
-                    <flux:table.cell>{{ $producto->nombre }}</flux:table.cell>
-                    <flux:table.cell>{{ $producto->pivot->cantidad }}</flux:table.cell>
-                    <flux:table.cell>${{ $producto->precio }}</flux:table.cell>
-                    <flux:table.cell>{{ $producto->created_at }}</flux:table.cell>
-                </flux:table.row>
+            @foreach ($carritos as $carrito)
+                @foreach ($carrito->stocks as $stock)
+                    <flux:table.row>
+                        <flux:table.cell>{{ $loop->iteration }}</flux:table.cell>
+                        <flux:table.cell>{{ $stock->nombre }}</flux:table.cell>
+                        <flux:table.cell>{{ $stock->pivot->cantidad }}</flux:table.cell>
+                        <flux:table.cell>${{ $stock->precio }}</flux:table.cell>
+                        <flux:table.cell>${{ $stock->precio * $stock->pivot->cantidad }}</flux:table.cell>
+                        <flux:table.cell>{{ $stock->pivot->created_at }}</flux:table.cell>
+                        {{-- Botón eliminar aquí si lo necesitas --}}
+                        <flux:table.cell>
+                            <form class="eliminar-producto" data-stock-id="{{ $stock->id }}" action="{{ route('carrito.eliminar', $stock->id) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <flux:button type="submit" color="red">Eliminar</flux:button>
+                            </form>
+                        </flux:table.cell>
+                    </flux:table.row>
+                @endforeach
             @endforeach
         </flux:table.rows>
 
     </flux:table>
-@endsection
+
+    <flux:card class="space-y-6">
+
+        <flux:text class="text-base">cantidad de Producto:
+            {{ $carritos->sum(function ($carrito) {
+                return $carrito->stocks->sum('pivot.cantidad');
+            }) }}
+        </flux:text>
+
+        <flux:text class="text-base">total a pagar:
+            ${{ $carritos->sum(function ($carrito) {
+                return $carrito->stocks->sum(function ($stock) {
+                    return $stock->precio * $stock->pivot->cantidad;
+                });
+            }) }}
+        </flux:text>
+
+        {{-- Procesar venta boton  --}}
+<form action="{{ route('carrito.procesar-venta') }}" method="POST" 
+      style="display: inline;" 
+      onsubmit="return confirm('¿Confirmar compra?')">
+    @csrf
+    <flux:button type="submit">Realizar Compra</flux:button>
+</form>        {{--se usa el soft delete, y resta la cantidad del--}}
+    </flux:card>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function () {
+    $('.eliminar-producto').on('submit', function (e) {
+        e.preventDefault();
+        let form = $(this);
+        let stockId = form.data('stock-id');
+        let actionUrl = form.attr('action');
+
+        $.ajax({
+            url: actionUrl,
+            type: 'POST',
+            data: form.serialize(),
+            dataType: 'json',
+            success: function (response) {
+                alert(response.message);
+                // Opcional: recargar la página o eliminar la fila de la tabla
+                form.closest('tr').remove();
+            },
+            error: function (xhr) {
+                alert('Error al eliminar el producto');
+            }
+        });
+    });
+});
+</script>
+
+
+    @endsection
+
+
+
+    
