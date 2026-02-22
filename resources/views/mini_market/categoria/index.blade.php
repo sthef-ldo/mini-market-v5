@@ -26,9 +26,11 @@
                         <flux:table.cell>{{ $categoria->stocks()->count() }}</flux:table.cell>
                         <flux:table.cell>
                             {{-- Boton Editar --}}
-                            <flux:modal.trigger name="editar-categoria">
-                                <flux:button icon="pencil" color="blue" size="sm" href="#">Editar</flux:button>
+                            <flux:modal.trigger :name="'editar-categoria-' . $categoria->id">
+                                <flux:button icon="pencil" color="blue" size="sm" data-id="{{ $categoria->id }}"
+                                    data-nombre="{{ $categoria->nombre }}" href="#">Editar</flux:button>
                             </flux:modal.trigger>
+
                             {{-- Boton Eliminar --}}
                             <form action="{{ route('categorias.destroy', $categoria->id) }}" method="POST">
                                 @csrf
@@ -78,24 +80,27 @@
 
 
 {{-- Modal para EDITAR una categoria --}}
-<flux:modal name="editar-categoria" class="md:w-96">
-    <form action="{{ route('categorias.update', $categoria->id) }}" method="POST">
-        @csrf
-        @method('PUT')
+@forelse ($categorias as $categoria)
+    <!-- fila de tabla existente -->
 
-        <div class="space-y-6">
-            <div>
-                <flux:heading size="lg">Editar Categoria</flux:heading>
+    {{-- Modal EDITAR específico para esta categoría --}}
+    <flux:modal :name="'editar-categoria-' . $categoria->id" class="md:w-96">
+        <form action="{{ route('categorias.update', $categoria->id) }}" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="space-y-6">
+                <div>
+                    <flux:heading size="lg">Editar {{ $categoria->nombre }}</flux:heading>
+                </div>
+                <flux:input label="Nombre de la Categoria" placeholder="ej: Bebidas" name="nombre"
+                    value="{{ $categoria->nombre }}" />
+                <div class="flex">
+                    <flux:spacer />
+                    <flux:button type="submit" variant="primary">Guardar</flux:button>
+                </div>
             </div>
-
-            <flux:input label="Nombre de la Categoria" placeholder="ej: Bebidas" name="nombre"
-                value="{{ $categoria->nombre }}" />
-
-            <div class="flex">
-                <flux:spacer />
-
-                <flux:button type="submit" variant="primary">Guardar</flux:button>
-            </div>
-        </div>
-    </form>
-</flux:modal>
+        </form>
+    </flux:modal>
+@empty
+    <!-- fila vacía existente -->
+@endforelse

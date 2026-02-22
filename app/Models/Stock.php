@@ -11,16 +11,14 @@ class Stock extends Model
         'descripcion',
         'precio',
         'cantidad',
-        'categoria',
+        'categoria_id',
     ];
     protected $table = 'stocks';
 
-    public function carritos()
-    {
+    public function carritos(){
         return $this->belongsToMany(Carrito::class, 'carrito_stocks')->withPivot('cantidad')->withTimestamps();
     }
-    public function categoria()
-    {
+    public function categoria(){
         return $this->belongsTo(Categoria::class, 'categoria_id', 'id');
     }
 }
