@@ -18,7 +18,7 @@ return new class extends Migration
             $table->float('precio');
             $table->integer('cantidad');
             $table->integer('categoria_id');
-            //$table->string('imagen')->nullable();   //agregar despues la imagen para la descripcion del producto
+            $table->string('imagen')->nullable();   //agregar despues la imagen para la descripcion del producto
             $table->timestamps();
         });
     }

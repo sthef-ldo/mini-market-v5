@@ -16,7 +16,7 @@
 
         {{-- Card principal --}}
         <flux:card>
-            <form action="{{ route('stock.store') }}" method="POST">
+            <form action="{{ route('stock.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="space-y-6">
@@ -49,6 +49,8 @@
                     {{-- Descripción del elemento --}}
                     <flux:textarea name="descripcion" rows="4" label="Descripción"
                         placeholder="Descripción del producto (opcional)">{{ old('descripcion') }}</flux:textarea>
+
+                     <flux:input label="Imagen" type="file"  name="imagen" value="{{ old('imagen') }}"  />
 
                     {{-- Botones de acción alineados a la derecha --}}
                     <div class="flex justify-end space-x-3">

@@ -16,7 +16,7 @@
 
         {{-- Card principal --}}
         <flux:card>
-            <form action="{{ route('stock.update', $stock->id) }}" method="POST">
+            <form action="{{ route('stock.update', $stock->id) }}" enctype="multipart/form-data" method="POST">
                 @csrf
                 @method('PATCH')
 
@@ -47,6 +47,9 @@
                     <flux:textarea name="descripcion" rows="4" label="Descripción"
                         placeholder="Descripción del producto (opcional)">{{ old('descripcion', $stock->descripcion) }}
                     </flux:textarea>
+
+                    <flux:input label="Imagen" type="file"  name="imagen" value="{{ old('imagen') }}"  />
+
 
                     {{-- Botones de acción alineados a la derecha --}}
                     <div class="flex justify-end space-x-3">

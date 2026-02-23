@@ -12,6 +12,7 @@ class Stock extends Model
         'precio',
         'cantidad',
         'categoria_id',
+        'imagen',
     ];
     protected $table = 'stocks';
 
