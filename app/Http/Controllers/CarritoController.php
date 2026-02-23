@@ -23,7 +23,8 @@ class CarritoController extends Controller
 
 
 
-    public function guardar(Request $request) {
+    public function guardar(Request $request)
+    {
         // Validar
         $request->validate([
             'cantidad' => 'required|integer|min:1',
@@ -60,10 +61,13 @@ class CarritoController extends Controller
         return response()->json([
             'message' => 'Producto actualizado en carrito correctamente',
             'data'    => $request->all(),
+            'unique_count' => $carrito->stocks()->count(), // <-- esto
+
         ]);
     }
 
-    public function eliminar($stockId) {
+    public function eliminar($stockId)
+    {
         $user = Auth::user();
         $carrito = Carrito::where('user_id', $user->id)->first();
 
@@ -75,7 +79,8 @@ class CarritoController extends Controller
         return response()->json(['message' => 'Carrito no encontrado'], 404);
     }
 
-    public function procesarVenta() {
+    public function procesarVenta()
+    {
         $user = Auth::user();
         $carrito = Carrito::where('user_id', $user->id)->first();
         if ($carrito) {
@@ -83,5 +88,4 @@ class CarritoController extends Controller
         }
         return response()->json(['message' => 'Venta procesada correctamente']);
     }
-
 }

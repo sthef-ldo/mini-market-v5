@@ -4,10 +4,6 @@
     <flux:card class="max-w-7xl mx-auto">
         <flux:heading size="2xl" class="mb-8 text-center">Productos disponibles</flux:heading>
 
-        <flux:modal.trigger name="carrito-modal">
-            <flux:button>Carrito</flux:button>
-        </flux:modal.trigger>
-
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             @forelse ($stocks as $stock)
                 <div
@@ -19,6 +15,12 @@
                             <span class="text-gray-500 text-sm">🛒 Producto</span>
                         </div>
 
+                        <div>
+                            <img id="imgPreview"
+                                src="{{ $stock->imagen ? Storage::url($stock->imagen) : asset('images/sin-imagen.png') }}"
+                                alt="Imagen del producto {{ $stock->nombre }}"
+                                class="w-full h-full object-cover object-center transition-all duration-300 hover:scale-105">
+                        </div>
                         {{-- Nombre --}}
                         <h3 class="text-xl font-bold text-gray-900 mb-2 truncate">
                             {{ $stock->nombre }}
@@ -47,7 +49,7 @@
                             @endif
                         </div>
 
-                      
+
 
                         {{-- Botón ver detalles --}}
                         <flux:button href="{{ route('catalogo.show', $stock->id) }}" variant="primary"
@@ -65,12 +67,3 @@
 
     </flux:card>
 @endsection
-
-
-
-
-
-
-
-
-

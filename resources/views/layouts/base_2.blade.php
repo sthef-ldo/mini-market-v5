@@ -22,21 +22,12 @@
 
         <flux:navbar class="me-1.5 space-x-0.5 rtl:space-x-reverse py-0!">
 
-            {{-- BOTON MODAL --}}
-            <flux:modal.trigger name="carrito-modal">
-                <flux:button icon="shopping-cart"></flux:button>
-            </flux:modal.trigger>
+            {{-- BOTON CCONTADOR DE PRODUCTOS --}}
 
-            {{--  INICIO DEL MODAL --}}
-            <flux:modal name="carrito-modal" class="md:w-96">
-                <div class="space-y-6">
-                    {{-- contenido de carrito, se mumestra el nombre del producto, la cantidad, el precio y un boton para eliminar el producto del carrito, y un boton para finalizar la compra --}}
-                </div>
-            </flux:modal>
+            <flux:button href="{{ route('carrito.mostrar') }}" icon="shopping-cart"></flux:button>
 
 
-
-            {{--  FIN DEL MODAL --}}
+            {{--  FIN DEL BOTON CCONTADOR DE PRODUCTOS --}}
 
             <flux:tooltip :content="__('Search')" position="bottom">
 
@@ -93,6 +84,8 @@
     <flux:main>
         @yield('content')
     </flux:main>
+
+
 
 
     @fluxScripts
