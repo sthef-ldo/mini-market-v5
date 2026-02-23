@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\CatalogoController;
+use App\Http\Controllers\VentataController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -40,8 +41,8 @@ Route::delete('/carrito/eliminar/{stockId}', [CarritoController::class, 'elimina
 
 
 
-Route::post('/carrito/procesar-venta', [CarritoController::class, 'procesarVenta'])->name('carrito.procesar-venta')->middleware('auth');
-
+Route::post('/procesar-venta', [VentataController::class, 'procesarVenta'])
+    ->name('ventas.procesar');
 
 
 

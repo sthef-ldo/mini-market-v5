@@ -65,4 +65,8 @@ class User extends Authenticatable
      public function carrito(){
         return $this->hasOne(Carrito::class);
     }
+
+    public function ventas(){
+        return $this->hasMany(Venta::class);
+    }
 }

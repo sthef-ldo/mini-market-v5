@@ -22,4 +22,7 @@ class Stock extends Model
     public function categoria(){
         return $this->belongsTo(Categoria::class, 'categoria_id', 'id');
     }
+    public function ventaDetalles(){
+        return $this->hasMany(VentaDetalle::class, 'stock_id', 'id');
+    }
 }

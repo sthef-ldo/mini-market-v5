@@ -27,7 +27,8 @@
                         <flux:table.cell>{{ $stock->pivot->created_at }}</flux:table.cell>
                         {{-- Botón eliminar aquí si lo necesitas --}}
                         <flux:table.cell>
-                            <form class="eliminar-producto" data-stock-id="{{ $stock->id }}" action="{{ route('carrito.eliminar', $stock->id) }}" method="POST">
+                            <form class="eliminar-producto" data-stock-id="{{ $stock->id }}"
+                                action="{{ route('carrito.eliminar', $stock->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <flux:button type="submit" color="red">Eliminar</flux:button>
@@ -57,46 +58,43 @@
         </flux:text>
 
         {{-- Procesar venta boton  --}}
-<form action="{{ route('carrito.procesar-venta') }}" method="POST" 
-      style="display: inline;" 
-      onsubmit="return confirm('¿Confirmar compra?')">
-    @csrf
-    <flux:button type="submit">Realizar Compra</flux:button>
-</form>        {{--se usa el soft delete, y resta la cantidad del--}}
+
+        
+        <form action="{{ route('ventas.procesar') }}" method="POST"
+            onsubmit="return confirm('¿Deseas finalizar esta compra?');">
+            @csrf
+          <flux:button type="submit">Realizar Compra</flux:button>
+        </form>
+        {{-- Procesar venta boton  --}}
+
     </flux:card>
 
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<script>
-$(document).ready(function () {
-    $('.eliminar-producto').on('submit', function (e) {
-        e.preventDefault();
-        let form = $(this);
-        let stockId = form.data('stock-id');
-        let actionUrl = form.attr('action');
+    <script>
+        $(document).ready(function() {
+            $('.eliminar-producto').on('submit', function(e) {
+                e.preventDefault();
+                let form = $(this);
+                let stockId = form.data('stock-id');
+                let actionUrl = form.attr('action');
 
-        $.ajax({
-            url: actionUrl,
-            type: 'POST',
-            data: form.serialize(),
-            dataType: 'json',
-            success: function (response) {
-                alert(response.message);
-                // Opcional: recargar la página o eliminar la fila de la tabla
-                form.closest('tr').remove();
-            },
-            error: function (xhr) {
-                alert('Error al eliminar el producto');
-            }
+                $.ajax({
+                    url: actionUrl,
+                    type: 'POST',
+                    data: form.serialize(),
+                    dataType: 'json',
+                    success: function(response) {
+                        alert(response.message);
+                        // Opcional: recargar la página o eliminar la fila de la tabla
+                        form.closest('tr').remove();
+                    },
+                    error: function(xhr) {
+                        alert('Error al eliminar el producto');
+                    }
+                });
+            });
         });
-    });
-});
-</script>
-
-
-    @endsection
-
-
-
-    
+    </script>
+@endsection

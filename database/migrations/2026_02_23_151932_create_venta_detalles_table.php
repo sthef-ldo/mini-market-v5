@@ -11,16 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stocks', function (Blueprint $table) {
+        Schema::create('venta_detalles', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre')->unique();
-            $table->string('descripcion')->nullable();
-            $table->decimal('precio', 10, 2);
+            $table->foreignId('venta_id')->constrained()->onDelete('cascade');
+            $table->foreignId('stock_id')->constrained()->onDelete('cascade');
             $table->integer('cantidad');
-            $table->foreignId('categoria_id')->constrained()->onDelete('cascade');
-            $table->string('imagen')->nullable();   
+           // $table->decimal('precio_unitario', 10, 2);
+           // $table->decimal('subtotal', 10, 2);
             $table->timestamps();
-
         });
     }
 
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stocks');
+        Schema::dropIfExists('venta_detalles');
     }
 };
