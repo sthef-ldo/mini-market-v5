@@ -62,6 +62,7 @@ class CarritoController extends Controller
             'message' => 'Producto actualizado en carrito correctamente',
             'data'    => $request->all(),
             'unique_count' => $carrito->stocks()->count(), // <-- esto
+            
 
         ]);
     }

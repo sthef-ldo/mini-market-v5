@@ -22,12 +22,18 @@
 
         <flux:navbar class="me-1.5 space-x-0.5 rtl:space-x-reverse py-0!">
 
-            {{-- BOTON CCONTADOR DE PRODUCTOS --}}
+            {{-- BOTON CONTADOR DE PRODUCTOS --}}
+            <flux:button href="{{ route('carrito.mostrar') }}" icon="shopping-cart">
+                <span id="cart-count"
+                    class="ml-1 inline-flex items-center justify-center rounded-full text-white text-xs px-2 py-0.5">
+                    {{ $cartCount ?? 0 }}
+                </span>
+            </flux:button>
 
-            <flux:button href="{{ route('carrito.mostrar') }}" icon="shopping-cart"></flux:button>
 
 
-            {{--  FIN DEL BOTON CCONTADOR DE PRODUCTOS --}}
+
+            {{-- FIN BOTON CONTADOR --}}
 
             <flux:tooltip :content="__('Search')" position="bottom">
 

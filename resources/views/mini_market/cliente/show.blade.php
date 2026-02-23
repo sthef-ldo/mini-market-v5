@@ -83,7 +83,12 @@
                     success: function(response) {
                         $('#success').text(response.message);
                         $('#errors').empty();
-                        console.log(response.user);
+
+                        // Actualizar contador en el layout
+                        if (response.unique_count !== undefined) {
+                            $('#cart-count').text(response.unique_count);
+                        }
+                        /* console.log(response.user); */
                     },
                     error: function(xhr) {
                         if (xhr.status === 422) {

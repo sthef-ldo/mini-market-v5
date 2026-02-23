@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
+//prueba
+use App\Models\Carrito;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -23,6 +28,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        /* pruena */
+        View::composer('*', function ($view) {
+            if (Auth::check()) {
+                $carrito = Carrito::where('user_id', Auth::id())->first();
+                $cartCount = $carrito ? $carrito->stocks()->count() : 0;
+            } else {
+                $cartCount = 0;
+            }
+
+            $view->with('cartCount', $cartCount);
+        });
+        /* pruena */
+
         $this->configureDefaults();
     }
 
@@ -37,14 +55,15 @@ class AppServiceProvider extends ServiceProvider
             app()->isProduction(),
         );
 
-        Password::defaults(fn (): ?Password => app()->isProduction()
-            ? Password::min(12)
+        Password::defaults(
+            fn(): ?Password => app()->isProduction()
+                ? Password::min(12)
                 ->mixedCase()
                 ->letters()
                 ->numbers()
                 ->symbols()
                 ->uncompromised()
-            : null
+                : null
         );
     }
 }
