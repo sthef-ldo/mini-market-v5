@@ -25,6 +25,22 @@ class VentataController extends Controller
         return view('mini_market.ventas.show', compact('venta', 'detalles'));
     }
 
+     //soft delete de venta y detalles
+    public function destroy($id)
+    {
+        $venta = Venta::findOrFail($id);
+
+        // Eliminar (soft delete) los detalles 
+        $venta->detalles()->get()->each(function ($detalle) {
+            $detalle->delete();
+        });
+
+        //  eliminar la venta
+        $venta->delete();
+
+        return redirect()->route('ventas.index')->with('success', 'Venta eliminada correctamente.');
+    }
+
 
 
     public function procesarVenta(Request $request)

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             //$table->decimal('total', 10, 2);
             $table->string('estado')->default('completada');
+            $table->softDeletes();
             //$table->timestamp('fecha_venta')->useCurrent();
             $table->timestamps();
         });

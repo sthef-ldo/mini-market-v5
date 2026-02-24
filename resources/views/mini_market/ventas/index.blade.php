@@ -11,44 +11,51 @@
         {{-- Encabezado con botón de creación --}}
         <div class="flex items-center justify-between mt-6 mb-4">
             <flux:heading size="xl">Listado de ventas</flux:heading>
-            
+
         </div>
 
-    
+
         {{-- Tabla de categorías --}}
-    
+
         <div>
             <flux:card class="space-y-6">
-            <flux:table>
-                <flux:table.columns>
-                    <flux:table.column>ID</flux:table.column>
-                    <flux:table.column>Usuario</flux:table.column>
-                    <flux:table.column>Fecha</flux:table.column>
-                    <flux:table.column>Detalles</flux:table.column>
-                </flux:table.columns>
+                <flux:table>
+                    <flux:table.columns>
+                        <flux:table.column>ID</flux:table.column>
+                        <flux:table.column>Usuario</flux:table.column>
+                        <flux:table.column>Fecha</flux:table.column>
+                        <flux:table.column>Detalles</flux:table.column>
+                    </flux:table.columns>
 
-                <flux:table.rows>
-                    @forelse ($ventas as $venta)
-                        <flux:table.row>
-                            <flux:table.cell>{{ $venta->id }}</flux:table.cell>
-                            <flux:table.cell>{{ $venta->user->email }}</flux:table.cell>
-                            <flux:table.cell>{{ $venta->created_at }}</flux:table.cell>
-                            <flux:table.cell>
-                                <flux:button variant="primary" href="{{ route('ventas.show', $venta->id) }}">Ver detalles</flux:button>
-                                 <flux:button variant="primary" href="">Eliminar</flux:button> {{-- usar soft delete --}}
-                            </flux:table.cell>
-                        </flux:table.row>
-                    @empty
-                        <flux:table.row>
-                            <flux:table.cell colspan="4" class="text-center">
-                                No hay ventas registradas
-                            </flux:table.cell>
-                        </flux:table.row>
-                    @endforelse
-                </flux:table.rows>
-            </flux:table>
+                    <flux:table.rows>
+                        @forelse ($ventas as $venta)
+                            <flux:table.row>
+                                <flux:table.cell>{{ $venta->id }}</flux:table.cell>
+                                <flux:table.cell>{{ $venta->user->email }}</flux:table.cell>
+                                <flux:table.cell>{{ $venta->created_at }}</flux:table.cell>
+                                <flux:table.cell>
+                                    <flux:button variant="primary" href="{{ route('ventas.show', $venta->id) }}">Ver detalles
+                                    </flux:button>
+                                    <form action="{{ route('ventas.destroy', $venta->id) }}" method="POST"
+                                        onsubmit="return confirm('¿Eliminar esta venta?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <flux:button type="submit" class="btn btn-danger">Eliminar</flux:button>
+                                    </form>
+                                    
+                                    {{-- usar soft delete --}}
+                                </flux:table.cell>
+                            </flux:table.row>
+                        @empty
+                            <flux:table.row>
+                                <flux:table.cell colspan="4" class="text-center">
+                                    No hay ventas registradas
+                                </flux:table.cell>
+                            </flux:table.row>
+                        @endforelse
+                    </flux:table.rows>
+                </flux:table>
             </flux:card>
         </div>
     </div>
 @endsection
-
