@@ -7,6 +7,8 @@ use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\CatalogoController;
 use App\Http\Controllers\VentataController;
 
+use App\Http\Controllers\PapeleraController;
+
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
@@ -58,7 +60,7 @@ Route::middleware('auth')->group(function () {
 
 
 Route::resource('/ventas', VentataController::class); // ← prueba asignado a admin
-
-
+Route::resource('/papelera', PapeleraController::class); // ← prueba asignado a admin
+Route::put('/{id}/restaurar', [PapeleraController::class, 'restaurar'])->name('papelera.restaurar');
 
 require __DIR__.'/settings.php';
