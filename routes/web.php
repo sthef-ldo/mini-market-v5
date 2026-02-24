@@ -11,42 +11,54 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::view('dashboard', 'dashboard')
+// Dashboard público (cualquiera puede ver)
+ Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+
+
+
+//  ADMIN SOLO
+Route::middleware(['auth', 'role:admin'])->group(function () {
+/*     Route::get('dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+     */
+    // CATEGORIAS 
+    Route::resource('categorias', CategoriaController::class)
+        ->except(['show']); // Solo index, store, update, destroy
     
+    //  STOCK  
+    Route::resource('stock', StockController::class);
+});
+
+
+
+//  CLIENTES
+Route::resource('/catalogo', CatalogoController::class); // ← Público
+
+// Carrito (requiere login)
+Route::middleware('auth')->group(function () {
+    Route::get('/carrito/mostrar', [CarritoController::class, 'carrito'])
+        ->name('carrito.mostrar');
     
-// Rutas para categorías
-Route::resource('/categorias', CategoriaController::class)
-    ->except(['show', 'create', 'edit' ]); 
+    Route::post('/guardar-carrito', [CarritoController::class, 'guardar'])
+        ->name('carrito.guardar');
+    
+    Route::delete('/carrito/eliminar/{stockId}', [CarritoController::class, 'eliminar'])
+        ->name('carrito.eliminar');
 
-// Rutas para productos (stock)
-route::resource('/stock', StockController::class);
-
-
-// Rutas para mostrar el carrito
-Route::get('/carrito/mostrar', [CarritoController::class, 'carrito'])
-    ->name('carrito.mostrar')
-    ->middleware('auth');  // ← Opcional: obliga login
-
-
-
-// Rutas para carrito
-route::resource('/catalogo', CatalogoController::class);
-
-
-//prueba para agregar al carrito (funciona)
-Route::post('/guardar-carrito', [CarritoController::class, 'guardar'])->name('carrito.guardar');
-Route::delete('/carrito/eliminar/{stockId}', [CarritoController::class, 'eliminar'])->name('carrito.eliminar');
-
-
-
-Route::post('/procesar-venta', [VentataController::class, 'procesarVenta'])
+    // Procesar venta  
+    Route::post('/procesar-venta', [VentataController::class, 'procesarVenta'])
     ->name('ventas.procesar');
+});
 
+
+
+
+Route::resource('/ventas', VentataController::class); // ← prueba asignado a admin
 
 
 
 require __DIR__.'/settings.php';
-
-

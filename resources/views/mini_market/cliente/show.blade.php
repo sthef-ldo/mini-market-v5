@@ -40,7 +40,7 @@
             <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
 
                 {{-- Formulario de cantidad --}}
-                @if ($stock->cantidad > 0)
+                @if ($stock->cantidad > 0 )
                     <form id="form-user" class="flex items-end gap-4">
                         @csrf
                         <div class="w-32">

@@ -23,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'rol',
     ];
 
     /**
@@ -68,5 +69,10 @@ class User extends Authenticatable
 
     public function ventas(){
         return $this->hasMany(Venta::class);
+    }
+
+
+       public function esAdmin(): bool{
+        return ($this->rol ?? 'user') === 'admin';
     }
 }

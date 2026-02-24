@@ -35,12 +35,12 @@ class StockController extends Controller
             'imagen' => 'nullable|image|max:2048',
         ]);
 
-        // ✅ PRIMERO procesar la imagen
+        // procesar la imagen
         if ($request->hasFile('imagen')) {
             $data['imagen'] = $request->file('imagen')->store('stock', 'public');
         }
 
-        // ✅ LUEGO crear el registro con TODOS los datos
+        
         $stock = Stock::create($data);
 
         return redirect()->route('stock.index')->with('success', 'Stock creado exitosamente.');
