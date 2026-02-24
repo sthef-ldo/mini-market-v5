@@ -12,7 +12,7 @@ class LoginResponseCustom implements LoginResponse
 
         return match ($user->rol ?? null) {
             'cliente' => redirect()->route('catalogo.index'),
-            'admin'   => redirect()->route('dashboard'),
+            'admin'   => redirect()->route('stock.index'),
             default   => redirect()->intended(config('fortify.home', '/')),
         };
     }
