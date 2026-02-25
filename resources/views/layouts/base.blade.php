@@ -68,8 +68,8 @@
         <flux:spacer />
 
         <flux:dropdown position="top" align="end">
-            <flux:profile :initials="auth()->user()->initials()" icon-trailing="chevron-down" />
-
+{{--             <flux:profile :initials="auth()->user()->initials()" icon-trailing="chevron-down" />
+ --}}
             <flux:menu>
                 <flux:menu.radio.group>
                     <div class="p-0 text-sm font-normal">

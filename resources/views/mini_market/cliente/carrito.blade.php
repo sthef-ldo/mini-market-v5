@@ -3,6 +3,18 @@
 @section('content')
     <flux:heading size="lg" class="mb-6">Carrito de Compras</flux:heading>
 
+    @if (session('error') || session('success'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                @if (session('error'))
+                    alert(@json(session('error')));
+                @elseif (session('success'))
+                    alert(@json(session('success')));
+                @endif
+            });
+        </script>
+    @endif
+
     {{-- Tabla de productos --}}
     <flux:card class="flex flex-col gap-3 p-6 w-full ">
         <flux:table class="mb-10 w-full">

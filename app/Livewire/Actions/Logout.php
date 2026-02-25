@@ -17,6 +17,6 @@ class Logout
         Session::invalidate();
         Session::regenerateToken();
 
-        return redirect('/');
+        return redirect('catalogo'); //prueba redirigir a catálogo después de cerrar sesión
     }
 }

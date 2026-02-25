@@ -10,10 +10,17 @@ use App\Http\Controllers\VentataController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PapeleraController;
 
-Route::get('/', function () {
+/* Route::get('/', function () {
     return view('welcome');
-})->name('home');
-// Dashboard público (cualquiera puede ver)
+})->name('home'); 
+
+/* Route::get('/', function () {
+    return redirect()->route('catalogo.index');
+});
+ */
+
+Route::get('/', [App\Http\Controllers\CatalogoController::class, 'index'])
+    ->name('home');
 
 
 
