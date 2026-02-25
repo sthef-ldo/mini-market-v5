@@ -15,57 +15,63 @@ Route::get('/', function () {
 })->name('home');
 // Dashboard público (cualquiera puede ver)
 
-Route::get('dashboard', DashboardController::class)
-     ->middleware(['auth', 'verified'])
-     ->name('dashboard');
 
 
 
 //  ADMIN SOLO
 Route::middleware(['auth', 'role:admin'])->group(function () {
-/*     Route::get('dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-     */
+
+    // DASHBOARD 
+    Route::get('dashboard', DashboardController::class)
+        ->name('dashboard');
+
     // CATEGORIAS 
     Route::resource('categorias', CategoriaController::class)
-        ->except(['show']); // Solo index, store, update, destroy
-    
+        ->except(['show', 'create', 'edit']); // Solo index, store, update, destroy
+
     //  STOCK  
     Route::resource('stock', StockController::class);
+
+    // VENTAS
+    Route::resource('/ventas', VentataController::class); // ← prueba asignado a admin
+
+    // PAPELERA DE VENTAS ELIMINADAS
+    Route::resource('/papelera', PapeleraController::class)
+        ->except(['create', 'edit', 'store', 'update']); // Solo index, store, destroy
+    //Ruta para restaurar venta eliminada
+    Route::put('/{id}/restaurar', [PapeleraController::class, 'restaurar'])->name('papelera.restaurar');
 });
 
 
 
-//  CLIENTES
-Route::resource('/catalogo', CatalogoController::class); // ← Público
+//  CLIENTES - CATALOGO DE PRODUCTOS (público)
+Route::resource('/catalogo', CatalogoController::class)
+    ->only(['index', 'show']);
 
 // Carrito (requiere login)
 Route::middleware('auth')->group(function () {
     Route::get('/carrito/mostrar', [CarritoController::class, 'carrito'])
         ->name('carrito.mostrar');
-    
+
     Route::post('/guardar-carrito', [CarritoController::class, 'guardar'])
         ->name('carrito.guardar');
-    
+
     Route::delete('/carrito/eliminar/{stockId}', [CarritoController::class, 'eliminar'])
         ->name('carrito.eliminar');
 
     // Procesar venta  
     Route::post('/procesar-venta', [VentataController::class, 'procesarVenta'])
-    ->name('ventas.procesar');
+        ->name('ventas.procesar');
 });
 
 
 
 
-Route::resource('/ventas', VentataController::class); // ← prueba asignado a admin
-Route::resource('/papelera', PapeleraController::class); // ← prueba asignado a admin
-Route::put('/{id}/restaurar', [PapeleraController::class, 'restaurar'])->name('papelera.restaurar');
 
 
 
 
 
 
-require __DIR__.'/settings.php';
+
+require __DIR__ . '/settings.php';

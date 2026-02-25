@@ -11,16 +11,18 @@ class DashboardController
 {
     public function __invoke()
     {
-        $users = User::count();
-        $categorias = Categoria::count();
-        $stocks = Stock::count();
-        $ventas = Venta::count();
 
-        $recent = Venta::with('user')->latest('created_at')->limit(6)->get();
+        $cantidadUsers = User::count();
 
-        $latestCategorias = Categoria::latest('created_at')->limit(5)->get();
-        $latestStocks = Stock::latest('created_at')->limit(5)->get();
+        $cantidadCategorias = Categoria::count();
+        $categorias = Categoria::latest()->take(5)->get();
 
-        return view('dashboard', compact('users', 'categorias', 'stocks', 'ventas', 'recent', 'latestCategorias', 'latestStocks'));
+        $cantidadStocks = Stock::count();
+        $stocks = Stock::latest()->take(5)->get();
+
+        $cantidadVentas = Venta::count();
+        $ventas = Venta::latest()->take(5)->get();
+
+        return view('dashboard', compact('categorias', 'stocks', 'ventas', 'cantidadCategorias', 'cantidadStocks', 'cantidadVentas','cantidadUsers'));
     }
 }

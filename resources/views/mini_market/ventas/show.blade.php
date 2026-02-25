@@ -14,6 +14,8 @@
         {{-- Encabezado con botón de creación --}}
         <div class="flex items-center justify-between mt-6 mb-4">
             <flux:heading size="xl">Detalles de Venta</flux:heading>
+
+            <flux:button href="{{ route('ventas.index') }}" variant="primary">Volver</flux:button>
             
         </div>
 
@@ -27,7 +29,6 @@
                     <flux:table.column>ID</flux:table.column>
                     <flux:table.column>Producto</flux:table.column>
                     <flux:table.column>cantidad</flux:table.column>
-                    <flux:table.column>Precio</flux:table.column>
                     <flux:table.column>Subtotal</flux:table.column>
                 </flux:table.columns>
 
@@ -37,8 +38,7 @@
                             <flux:table.cell>{{ $detalle->id }}</flux:table.cell>
                             <flux:table.cell>{{ $detalle->stock->nombre }}</flux:table.cell>
                             <flux:table.cell>{{ $detalle->cantidad }}</flux:table.cell>
-                            <flux:table.cell>{{ $detalle->precio }}</flux:table.cell>
-                            <flux:table.cell>{{ $detalle->cantidad * $detalle->precio }}</flux:table.cell>
+                            <flux:table.cell>${{ number_format($detalle->sub_total, 2) }}</flux:table.cell>
                         </flux:table.row>
                     @empty
                         <flux:table.row>

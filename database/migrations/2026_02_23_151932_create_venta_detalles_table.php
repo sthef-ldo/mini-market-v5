@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('cantidad');
             $table->softDeletes();
            // $table->decimal('precio_unitario', 10, 2);
-           // $table->decimal('subtotal', 10, 2);
+            $table->decimal('subtotal', 10, 2);
             $table->timestamps();
         });
     }

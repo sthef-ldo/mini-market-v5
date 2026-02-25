@@ -92,6 +92,7 @@ class VentataController extends Controller
                         'venta_id' => $ventaId,
                         'stock_id' => $item->stock_id,
                         'cantidad' => $item->cantidad,
+                        'sub_total' => $item->sub_total,
                         'created_at' => now(),
                         'updated_at' => now(),
                     ]);
