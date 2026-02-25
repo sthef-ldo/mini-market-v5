@@ -23,7 +23,7 @@
                         <flux:table.cell>{{ $stock->nombre }}</flux:table.cell>
                         <flux:table.cell>{{ $stock->pivot->cantidad }}</flux:table.cell>
                         <flux:table.cell>${{ $stock->precio }}</flux:table.cell>
-                        <flux:table.cell>${{ $stock->precio * $stock->pivot->cantidad }}</flux:table.cell>
+                        <flux:table.cell>${{  $stock->pivot->sub_total }}</flux:table.cell>{{-- prueba --}}
                         <flux:table.cell>{{ $stock->pivot->created_at }}</flux:table.cell>
                         {{-- Botón eliminar aquí si lo necesitas --}}
                         <flux:table.cell>

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\Carrito;
+use App\Models\Stock;
 use Illuminate\Support\Facades\DB;
 
 
@@ -23,7 +24,7 @@ class CarritoController extends Controller
 
 
 
-    public function guardar(Request $request) {
+    /* public function guardar(Request $request) {
         // Validar
         $request->validate([
             'cantidad' => 'required|integer|min:1',
@@ -33,6 +34,7 @@ class CarritoController extends Controller
         $user = Auth::user();
         $carrito = Carrito::where('user_id', $user->id)->first();
 
+        //verificar si el carrito existe, si no, lo crea
         if (!$carrito) {
             $carrito = Carrito::create([
                 'user_id' => $user->id,
@@ -61,9 +63,54 @@ class CarritoController extends Controller
             'message' => 'Producto actualizado en carrito correctamente',
             'data'    => $request->all(),
         ]);
+    } */
+
+
+    //prueba
+    public function guardar(Request $request)
+    {
+        $request->validate([
+            'cantidad' => 'required|integer|min:1',
+            'stock_id' => 'required|exists:stocks,id',
+        ]);
+
+        $user = Auth::user();
+        $carrito = Carrito::firstOrCreate(['user_id' => $user->id]);
+        $stockId = $request->stock_id;
+        $cantidad = $request->cantidad;
+
+        $stock = Stock::findOrFail($stockId);
+        $subTotal = $stock->precio * $cantidad;
+
+        // Si el producto ya existe en el carrito
+        $existe = $carrito->stocks()->where('stock_id', $stockId)->first();
+
+        if ($existe) {
+            $nuevaCantidad = $existe->pivot->cantidad + $cantidad;
+            $nuevoSubTotal = $stock->precio * $nuevaCantidad;
+
+            $carrito->stocks()->updateExistingPivot($stockId, [
+                'cantidad' => $nuevaCantidad,
+                'sub_total' => $nuevoSubTotal,
+            ]);
+        } else {
+            $carrito->stocks()->attach($stockId, [
+                'cantidad' => $cantidad,
+                'sub_total' => $subTotal,
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'Producto actualizado en carrito correctamente',
+        ]);
     }
 
-    public function eliminar($stockId) {
+    //prueba
+
+
+
+    public function eliminar($stockId)
+    {
         $user = Auth::user();
         $carrito = Carrito::where('user_id', $user->id)->first();
 
@@ -75,7 +122,8 @@ class CarritoController extends Controller
         return response()->json(['message' => 'Carrito no encontrado'], 404);
     }
 
-    public function procesarVenta() {
+    public function procesarVenta()
+    {
         $user = Auth::user();
         $carrito = Carrito::where('user_id', $user->id)->first();
         if ($carrito) {
@@ -83,5 +131,4 @@ class CarritoController extends Controller
         }
         return response()->json(['message' => 'Venta procesada correctamente']);
     }
-
 }

@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('carrito_id')->constrained()->onDelete('cascade');
             $table->foreignId('stock_id')->constrained()->onDelete('cascade');
-            $table->integer('cantidad')->default(1);
+            $table->integer('cantidad')->default(1); 
+             $table->decimal('sub_total', 10, 2)->default(0);//prueba
             $table->softDeletes();
             $table->timestamps();
         });
