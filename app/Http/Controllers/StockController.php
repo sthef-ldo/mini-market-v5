@@ -8,24 +8,21 @@ use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Http\Request;
 
-use function Pest\Laravel\delete;
 
 class StockController extends Controller
 {
-    public function index()
-    {
+    public function index() {
         $stocks = Stock::all();
 
         return view('mini_market.stock.index', compact('stocks'));
     }
 
-    public function create()
-    {
+    public function create() {
         $categorias = Categoria::all();
         return view('mini_market.stock.create', compact('categorias'));
     }
-    public function store(Request $request)
-    {
+
+    public function store(Request $request){
         $data = $request->validate([
             'nombre' => 'required|string|max:255',
             'cantidad' => 'required|integer',
@@ -46,23 +43,17 @@ class StockController extends Controller
         return redirect()->route('stock.index')->with('success', 'Stock creado exitosamente.');
     }
 
+    public function show(Stock $stock){
 
-
-
-    public function show(Stock $stock)
-    {
         return view('mini_market.stock.show', compact('stock'));
     }
 
-
-    public function edit(Stock $stock)
-    {
+    public function edit(Stock $stock) {
         $categorias = Categoria::all();
         return view('mini_market.stock.edit', compact('stock', 'categorias'));
     }
 
-    public function update(Request $request, Stock $stock)
-    {
+    public function update(Request $request, Stock $stock){
 
         $data = $request->validate([
             'nombre' => 'required|string|max:255',
@@ -75,16 +66,17 @@ class StockController extends Controller
 
         if ($request->hasFile('imagen')) {
             if ($stock->imagen) {
+                //borra la imagen anterior del almacenamiento
                 Storage::delete($stock->imagen);
             }
             $data['imagen'] = Storage::put('stock', $request->imagen);
         }
-
+        // actualiza la imagen 
         $stock->update($data);
         return redirect()->route('stock.index')->with('success', 'Stock actualizado exitosamente.');
     }
-    public function destroy(Stock $stock)
-    {
+
+    public function destroy(Stock $stock)  {
         $stock->delete();
         return redirect()->route('stock.index')->with('success', 'Stock eliminado exitosamente.');
     }

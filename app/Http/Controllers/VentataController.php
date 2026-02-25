@@ -13,21 +13,23 @@ use Illuminate\Http\Request;
 
 class VentataController extends Controller
 {
-    public function index()
-    {
+    public function index() {
+
         $ventas = Venta::all();
+
         return view('mini_market.ventas.index', compact('ventas'));
     }
 
-    public function show(Venta $venta)
-    {
+    public function show(Venta $venta)  {
+
         $detalles =   VentaDetalle::where('venta_id', $venta->id)->get();
+
         return view('mini_market.ventas.show', compact('venta', 'detalles'));
     }
 
      //soft delete de venta y detalles
-    public function destroy($id)
-    {
+    public function destroy($id){
+
         $venta = Venta::findOrFail($id);
 
         // Eliminar (soft delete) los detalles 
@@ -43,8 +45,8 @@ class VentataController extends Controller
 
 
 
-    public function procesarVenta(Request $request)
-    {
+    public function procesarVenta(Request $request){
+        
         try {
             return DB::transaction(function () {
                 $user = Auth::user();

@@ -8,14 +8,12 @@ use App\Models\VentaDetalle;
 
 class PapeleraController extends Controller
 {
-    public function index()
-    {
+    public function index() {
         $ventasEliminadas = Venta::onlyTrashed()->get();
         return view('mini_market.papelera.index', compact('ventasEliminadas'));
     }
 
-    public function show($venta)
-    {
+    public function show($venta){
         // Traer la venta eliminada (soft delete) con sus detalles eliminados
         $ventaEliminada = Venta::withTrashed()->findOrFail($venta);
 
@@ -26,8 +24,7 @@ class PapeleraController extends Controller
     }
 
     //restaurar venta eliminada
-    public function restaurar($venta)
-    {
+    public function restaurar($venta){
         //venta general
         $ventaEliminada = Venta::withTrashed()->find($venta);
         $ventaEliminada->restore(); // quita el deleted_at
@@ -42,8 +39,7 @@ class PapeleraController extends Controller
 
 
     // Eliminar permanentemente la venta y sus detalles
-    public function destroy($venta)
-    {
+    public function destroy($venta){
         $ventaEliminada = Venta::withTrashed()->findOrFail($venta);
 
         // Primero eliminar definitivamente los detalles
@@ -56,4 +52,5 @@ class PapeleraController extends Controller
             ->route('papelera.index')
             ->with('success', 'Venta y sus detalles eliminados permanentemente.');
     }
+    
 }

@@ -28,19 +28,17 @@
 
 
 
-                        {{-- Nombre --}}
+                        {{-- Datos del Producto --}}
                         <h3 class="text-xl font-bold text-gray-900 mb-2 truncate">
                             {{ $stock->nombre }}
                         </h3>
 
-                        {{-- Precio destacado --}}
                         <div class="mb-4">
                             <span class="text-2xl font-bold text-emerald-600">
                                 ${{ number_format($stock->precio, 2) }}
                             </span>
                         </div>
 
-                        {{-- Stock --}}
                         <div class="flex items-center justify-between mb-6">
                             <span class="text-sm text-gray-600">
                                 📦 {{ $stock->cantidad }} disponibles

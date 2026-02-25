@@ -44,7 +44,7 @@
 
                                 {{-- Botón Eliminar --}}
                                 <form action="{{ route('categorias.destroy', $categoria->id) }}" method="POST"
-                                    class="inline">
+                                    class="inline"  onsubmit="return confirm('¿Eliminar esta categoría?')">
                                     @csrf
                                     @method('DELETE')
                                     <flux:button icon="trash" type="submit" color="destructive" size="sm">

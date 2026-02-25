@@ -50,7 +50,7 @@
                                     </flux:button>
 
                                     {{-- Botón Eliminar --}}
-                                    <form action="{{ route('stock.destroy', $stock->id) }}" method="POST" class="inline">
+                                    <form action="{{ route('stock.destroy', $stock->id) }}" method="POST" class="inline"  onsubmit="return confirm('¿Eliminar este producto?')">
                                         @csrf
                                         @method('DELETE')
                                         <flux:button icon="trash" type="submit" color="destructive" size="sm">

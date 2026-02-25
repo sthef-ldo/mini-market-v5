@@ -34,27 +34,32 @@
                                 <flux:table.cell>{{ $ventaEliminada->user->email }}</flux:table.cell>
                                 <flux:table.cell>{{ $ventaEliminada->created_at }}</flux:table.cell>
                                 <flux:table.cell>
-                                    {{-- Ver detalles de la venta eliminada --}}
-                                    <flux:button variant="primary" href="{{ route('papelera.show', $ventaEliminada->id) }}">
-                                        Ver detalles
-                                    </flux:button>
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        {{-- Ver detalles --}}
+                                        <flux:button variant="primary"
+                                            href="{{ route('papelera.show', $ventaEliminada->id) }}">
+                                            Ver detalles
+                                        </flux:button>
 
-                                    {{-- RESTAURAR  la venta eliminada --}}
-                                    <form action="{{ route('papelera.restaurar', $ventaEliminada->id) }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
-                                        <flux:button type="submit" class="btn btn-success">Restaurar venta</flux:button>
-                                    </form>
+                                        {{-- Restaurar --}}
+                                        <form action="{{ route('papelera.restaurar', $ventaEliminada->id) }}" method="POST"  onsubmit="return confirm('¿Deseas restaurar esta venta y sus detalles?')">
+                                            @csrf
+                                            @method('PUT')
+                                            <flux:button type="submit" class="bg-green-600 hover:bg-green-700 text-white">
+                                                Restaurar
+                                            </flux:button>
+                                        </form>
 
-                                    {{-- ELIMINAR POR COMPLETO la venta  --}}
-                                    <form action="{{ route('papelera.destroy', $ventaEliminada->id) }}" method="POST"
-                                        onsubmit="return confirm('¿Eliminar esta venta?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <flux:button type="submit" class="btn btn-danger">Eliminar</flux:button>
-                                    </form>
-
-                                    {{-- usar soft delete --}}
+                                        {{-- Eliminar definitivamente --}}
+                                        <form action="{{ route('papelera.destroy', $ventaEliminada->id) }}" method="POST"
+                                            onsubmit="return confirm('¿Eliminar esta venta definitivamente?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <flux:button type="submit" class="bg-red-600 hover:bg-red-700 text-white">
+                                                Eliminar
+                                            </flux:button>
+                                        </form>
+                                    </div>
                                 </flux:table.cell>
                             </flux:table.row>
                         @empty

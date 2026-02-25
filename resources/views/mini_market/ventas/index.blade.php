@@ -12,6 +12,8 @@
         <div class="flex items-center justify-between mt-6 mb-4">
             <flux:heading size="xl">Listado de ventas</flux:heading>
 
+            <flux:button href="{{ route('papelera.index') }}" class="btn btn-danger">Papelera de Venta</flux:button>
+
         </div>
 
 
@@ -34,16 +36,21 @@
                                 <flux:table.cell>{{ $venta->user->email }}</flux:table.cell>
                                 <flux:table.cell>{{ $venta->created_at }}</flux:table.cell>
                                 <flux:table.cell>
-                                    <flux:button variant="primary" href="{{ route('ventas.show', $venta->id) }}">Ver detalles
-                                    </flux:button>
-                                    <form action="{{ route('ventas.destroy', $venta->id) }}" method="POST"
-                                        onsubmit="return confirm('¿Eliminar esta venta?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <flux:button type="submit" class="btn btn-danger">Eliminar</flux:button>
-                                    </form>
-                                    
-                                    {{-- usar soft delete --}}
+                                    <div class="flex items-center gap-2">
+                                        {{-- Botón para ver detalles de la venta --}}
+                                        <flux:button variant="primary" href="{{ route('ventas.show', $venta->id) }}">
+                                            Ver detalles
+                                        </flux:button>
+                                        {{-- Botón para softdelete venta  --}}
+                                        <form action="{{ route('ventas.destroy', $venta->id) }}" method="POST"
+                                            onsubmit="return confirm('¿Eliminar esta venta?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <flux:button type="submit" class="btn btn-danger">
+                                                Eliminar
+                                            </flux:button>
+                                        </form>
+                                    </div>
                                 </flux:table.cell>
                             </flux:table.row>
                         @empty

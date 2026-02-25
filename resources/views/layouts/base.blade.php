@@ -29,9 +29,14 @@
                     {{ __('Categorías') }}
                 </flux:sidebar.item>
 
-                  <flux:sidebar.item icon="archive-box" :href="route('stock.index')" :current="request()->routeIs('stock.index')"
+                <flux:sidebar.item icon="archive-box" :href="route('stock.index')" :current="request()->routeIs('stock.index')"
                     wire:navigate>
                     {{ __('Stock') }}
+                </flux:sidebar.item>
+
+                <flux:sidebar.item icon="currency-dollar" :href="route('ventas.index')" :current="request()->routeIs('ventas.index')"
+                    wire:navigate>
+                    {{ __('Ventas') }}
                 </flux:sidebar.item>
 
 
