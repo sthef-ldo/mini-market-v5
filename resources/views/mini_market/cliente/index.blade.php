@@ -9,18 +9,25 @@
                 <div
                     class="flux:card bg-white shadow-lg hover:shadow-xl transition-shadow duration-300 border rounded-xl overflow-hidden">
                     <div class="p-6">
-                        {{-- Imagen placeholder --}}
-                        <div
-                            class="w-full h-48 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-lg mb-4 flex items-center justify-center">
-                            <span class="text-gray-500 text-sm">🛒 Producto</span>
-                        </div>
 
-                        <div>
-                            <img id="imgPreview"
-                                src="{{ $stock->imagen ? Storage::url($stock->imagen) : asset('images/sin-imagen.png') }}"
-                                alt="Imagen del producto {{ $stock->nombre }}"
-                                class="w-full h-full object-cover object-center transition-all duration-300 hover:scale-105">
-                        </div>
+                        @if (empty($stock->imagen))
+                            {{-- Sin Imagen --}}
+                            <div
+                                class="w-full h-48 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-lg mb-4 flex items-center justify-center">
+                                <span class="text-gray-500 text-sm">🛒 Producto</span>
+                            </div>
+                        @else
+                            {{-- Sin Imagen --}}
+                            <div>
+                                <img id="imgPreview"
+                                    src="{{ $stock->imagen ? Storage::url($stock->imagen) : asset('images/sin-imagen.png') }}"
+                                    alt="Imagen del producto {{ $stock->nombre }}"
+                                    class="w-full h-full object-cover object-center transition-all duration-300 hover:scale-105">
+                            </div>
+                        @endif
+
+
+
                         {{-- Nombre --}}
                         <h3 class="text-xl font-bold text-gray-900 mb-2 truncate">
                             {{ $stock->nombre }}
