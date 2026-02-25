@@ -1,6 +1,8 @@
 @extends('layouts.base')
 
 @section('content')
+
+
     <div class="container mx-auto px-4 py-8">
         {{-- Breadcrumbs --}}
         <flux:breadcrumbs>
