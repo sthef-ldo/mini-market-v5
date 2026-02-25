@@ -32,9 +32,7 @@ class PapeleraController extends Controller
         // Restaurar todos los detalles asociados
         $ventaEliminada->detalles()->withTrashed()->restore();
 
-        return redirect()
-            ->route('papelera.index')
-            ->with('success', 'Venta y sus detalles fueron restaurados correctamente.');
+        return redirect()->route('papelera.index');
     }
 
 
@@ -48,9 +46,7 @@ class PapeleraController extends Controller
         // Luego eliminar definitivamente la venta
         $ventaEliminada->forceDelete();
 
-        return redirect()
-            ->route('papelera.index')
-            ->with('success', 'Venta y sus detalles eliminados permanentemente.');
+        return redirect() ->route('papelera.index');
     }
     
 }

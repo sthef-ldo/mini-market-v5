@@ -7,17 +7,17 @@ use App\Http\Controllers\CarritoController;
 use App\Http\Controllers\CatalogoController;
 use App\Http\Controllers\VentataController;
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PapeleraController;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
-
 // Dashboard público (cualquiera puede ver)
- Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
 
+Route::get('dashboard', DashboardController::class)
+     ->middleware(['auth', 'verified'])
+     ->name('dashboard');
 
 
 
@@ -62,5 +62,10 @@ Route::middleware('auth')->group(function () {
 Route::resource('/ventas', VentataController::class); // ← prueba asignado a admin
 Route::resource('/papelera', PapeleraController::class); // ← prueba asignado a admin
 Route::put('/{id}/restaurar', [PapeleraController::class, 'restaurar'])->name('papelera.restaurar');
+
+
+
+
+
 
 require __DIR__.'/settings.php';

@@ -20,7 +20,7 @@ class CategoriaController extends Controller
         ]);
 
         Categoria::create($data);
-        return redirect()->route('categorias.index')->with('success', 'Categoria creada exitosamente.');
+        return redirect()->route('categorias.index');
     }
 
     public function update(Request $request, Categoria $categoria){
@@ -30,11 +30,11 @@ class CategoriaController extends Controller
         ]);
 
         $categoria->update($data);
-        return redirect()->route('categorias.index')->with('success', 'Categoria actualizada exitosamente.');
+        return redirect()->route('categorias.index');
     }
 
     public function destroy(Categoria $categoria){
         $categoria->delete();
-        return redirect()->route('categorias.index')->with('success', 'Categoria eliminada exitosamente.');
+        return redirect()->route('categorias.index');
     }
 }

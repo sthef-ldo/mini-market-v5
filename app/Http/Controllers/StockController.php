@@ -40,7 +40,7 @@ class StockController extends Controller
         
         $stock = Stock::create($data);
 
-        return redirect()->route('stock.index')->with('success', 'Stock creado exitosamente.');
+        return redirect()->route('stock.index');
     }
 
     public function show(Stock $stock){
@@ -73,11 +73,11 @@ class StockController extends Controller
         }
         // actualiza la imagen 
         $stock->update($data);
-        return redirect()->route('stock.index')->with('success', 'Stock actualizado exitosamente.');
+        return redirect()->route('stock.index');
     }
 
     public function destroy(Stock $stock)  {
         $stock->delete();
-        return redirect()->route('stock.index')->with('success', 'Stock eliminado exitosamente.');
+        return redirect()->route('stock.index');
     }
 }

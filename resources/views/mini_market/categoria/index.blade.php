@@ -16,52 +16,51 @@
             </flux:modal.trigger>
         </div>
 
-    
         {{-- Tabla de categorías --}}
-    
+
         <div>
             <flux:card class="space-y-6">
-            <flux:table>
-                <flux:table.columns>
-                    <flux:table.column>ID</flux:table.column>
-                    <flux:table.column>Nombre</flux:table.column>
-                    <flux:table.column>Asignados</flux:table.column>
-                    <flux:table.column>Acciones</flux:table.column>
-                </flux:table.columns>
+                <flux:table>
+                    <flux:table.columns>
+                        <flux:table.column>ID</flux:table.column>
+                        <flux:table.column>Nombre</flux:table.column>
+                        <flux:table.column>Asignados</flux:table.column>
+                        <flux:table.column>Acciones</flux:table.column>
+                    </flux:table.columns>
 
-                <flux:table.rows>
-                    @forelse ($categorias as $categoria)
-                        <flux:table.row>
-                            <flux:table.cell>{{ $categoria->id }}</flux:table.cell>
-                            <flux:table.cell>{{ $categoria->nombre }}</flux:table.cell>
-                            <flux:table.cell>{{ $categoria->stocks()->count() }}</flux:table.cell>
+                    <flux:table.rows>
+                        @forelse ($categorias as $categoria)
+                            <flux:table.row>
+                                <flux:table.cell>{{ $categoria->id }}</flux:table.cell>
+                                <flux:table.cell>{{ $categoria->nombre }}</flux:table.cell>
+                                <flux:table.cell>{{ $categoria->stocks()->count() }}</flux:table.cell>
 
-                            <flux:table.cell class="flex space-x-2">
-                                {{-- Botón Editar --}}
-                                <flux:modal.trigger :name="'editar-categoria-' . $categoria->id">
-                                    <flux:button icon="pencil" size="sm" href="#">Editar</flux:button>
-                                </flux:modal.trigger>
+                                <flux:table.cell class="flex space-x-2">
+                                    {{-- Botón Editar --}}
+                                    <flux:modal.trigger :name="'editar-categoria-' . $categoria->id">
+                                        <flux:button icon="pencil" size="sm" href="#">Editar</flux:button>
+                                    </flux:modal.trigger>
 
-                                {{-- Botón Eliminar --}}
-                                <form action="{{ route('categorias.destroy', $categoria->id) }}" method="POST"
-                                    class="inline"  onsubmit="return confirm('¿Eliminar esta categoría?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <flux:button icon="trash" type="submit" color="destructive" size="sm">
-                                        Eliminar
-                                    </flux:button>
-                                </form>
-                            </flux:table.cell>
-                        </flux:table.row>
-                    @empty
-                        <flux:table.row>
-                            <flux:table.cell colspan="4" class="text-center">
-                                No hay categorías registradas
-                            </flux:table.cell>
-                        </flux:table.row>
-                    @endforelse
-                </flux:table.rows>
-            </flux:table>
+                                    {{-- Botón Eliminar --}}
+                                    <form action="{{ route('categorias.destroy', $categoria->id) }}" method="POST"
+                                        class="inline" onsubmit="return confirm('¿Eliminar esta categoría?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <flux:button icon="trash" type="submit" color="destructive" size="sm">
+                                            Eliminar
+                                        </flux:button>
+                                    </form>
+                                </flux:table.cell>
+                            </flux:table.row>
+                        @empty
+                            <flux:table.row>
+                                <flux:table.cell colspan="4" class="text-center">
+                                    No hay categorías registradas
+                                </flux:table.cell>
+                            </flux:table.row>
+                        @endforelse
+                    </flux:table.rows>
+                </flux:table>
             </flux:card>
         </div>
     </div>
