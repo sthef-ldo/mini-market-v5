@@ -87,42 +87,70 @@ class CarritoController extends Controller
 
 
     //aumentar o disminuir la cantidad de un producto en el carrito con botones
-    public function actualizarCarrito(Request $request, $stockId)
-    {
-        $user = Auth::user();
-        $carrito = Carrito::where('user_id', $user->id)->first();
+   public function actualizarCarrito(Request $request, $stockId)
+{
+    $user = Auth::user();
+    $carrito = Carrito::where('user_id', $user->id)->firstOrFail();
 
-        if (!$carrito) {
-            return response()->json(['message' => 'Carrito no encontrado'], 404);
-        }
+    $stock = Stock::findOrFail($stockId);
+    $pivot = $carrito->stocks()->where('stock_id', $stockId)->firstOrFail();
 
-        $pivot = $carrito->stocks()->where('stock_id', $stockId)->first();
+    $cantidadActual = $pivot->pivot->cantidad;
+    $accion = $request->input('accion');
 
-        if (!$pivot) {
-            return response()->json(['message' => 'Producto no encontrado en carrito'], 404);
-        }
+    $nuevaCantidad = $accion === 'sumar'
+        ? $cantidadActual + 1
+        : $cantidadActual - 1;
 
-        $cantidadActual = $pivot->pivot->cantidad;
-        $accion = $request->input('accion');
-
-        $nuevaCantidad = $accion === 'sumar'
-            ? $cantidadActual + 1
-            : max(1, $cantidadActual - 1); // No permitir menos de 1
-
-        // Si llega a 0, eliminar
-        if ($nuevaCantidad <= 0) {
-            $carrito->stocks()->detach($stockId);
-            return response()->json([
-                'message' => 'Producto eliminado',
-                'cantidad' => 0
-            ]);
-        }
-
-        $carrito->stocks()->updateExistingPivot($stockId, ['cantidad' => $nuevaCantidad]);
+    if ($nuevaCantidad <= 0) {
+        $carrito->stocks()->detach($stockId);
+        $totales = $this->recalcularTotales($carrito);
 
         return response()->json([
-            'message' => 'Cantidad actualizada',
-            'cantidad' => $nuevaCantidad
+            'message'      => 'Producto eliminado',
+            'removed'      => true,
+            'cantidad'     => 0,
+            'total_items'  => $totales['total_items'],
+            'total_price'  => $totales['total_price'],
         ]);
     }
+
+    $subTotal = $stock->precio * $nuevaCantidad;
+
+    $carrito->stocks()->updateExistingPivot($stockId, [
+        'cantidad'  => $nuevaCantidad,
+        'sub_total' => $subTotal,
+    ]);
+
+    $totales = $this->recalcularTotales($carrito);
+
+    return response()->json([
+        'message'      => 'Cantidad actualizada',
+        'cantidad'     => $nuevaCantidad,
+        'sub_total'    => $subTotal,
+        'total_items'  => $totales['total_items'],
+        'total_price'  => $totales['total_price'],
+        'removed'      => false,
+    ]);
+}
+
+
+
+
+
+private function recalcularTotales(Carrito $carrito)
+{
+    $carrito->load('stocks');
+
+    $totalItems = $carrito->stocks->sum('pivot.cantidad');
+    $totalPrice = $carrito->stocks->map(function ($s) {
+        return $s->precio * $s->pivot->cantidad;
+    })->sum();
+
+    return [
+        'total_items' => $totalItems,
+        'total_price' => $totalPrice,
+    ];
+}
+
 }
