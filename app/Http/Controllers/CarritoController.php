@@ -14,7 +14,8 @@ class CarritoController extends Controller
 
 
     //mostrar datos del carrito funciona
-    public function carrito() {
+    public function carrito()
+    {
         $user = Auth::user();  // Automáticamente sabe quién eres
         $carritos = Carrito::with('stocks')->where('user_id', $user->id)->get();
 
@@ -22,53 +23,8 @@ class CarritoController extends Controller
     }
 
 
-    /*  public function guardar(Request $request){
-        // Validar
-        $request->validate([
-            'cantidad' => 'required|integer|min:1',
-            'stock_id' => 'required|exists:stocks,id',
-        ]);
-
-        $user = Auth::user();
-        $carrito = Carrito::where('user_id', $user->id)->first();
-
-
-        //crea un carrito nuevo si no existe para el usuario
-        if (!$carrito) {
-            $carrito = Carrito::create([
-                'user_id' => $user->id,
-            ]);
-        }
-
-        $stockId = $request->stock_id;
-        $cantidad = $request->cantidad;
-
-        // existe el producto en el carrito? Si = sumamos cantidad. No = lo agrega como nuevo.
-        $existe = $carrito->stocks()->where('stock_id', $stockId)->exists();
-
-        if ($existe) {
-            // sumar cantidad al producto existente
-            $carrito->stocks()->updateExistingPivot($stockId, [
-                'cantidad' => DB::raw('cantidad + ' . $cantidad)
-            ]);
-        } else {
-            // agregar nuevo producto al carrito
-            $carrito->stocks()->attach($stockId, [
-                'cantidad' => $cantidad,
-            ]);
-        }
-
-        return response()->json([
-            'message' => 'Producto actualizado en carrito correctamente',
-            'data'    => $request->all(),
-            'unique_count' => $carrito->stocks()->count(), // cantidad de productos únicos en el carrito
-            
-
-        ]);
-    } */
-
-
-    public function guardar(Request $request){
+    public function guardar(Request $request)
+    {
         $request->validate([
             'cantidad' => 'required|integer|min:1',
             'stock_id' => 'required|exists:stocks,id',
@@ -101,13 +57,19 @@ class CarritoController extends Controller
         }
 
         return response()->json([
-            'message' => 'Producto actualizado en carrito correctamente',
+            'success' => true,
+            'message' => 'Producto agregado al carrito correctamente',
         ]);
-    }  //prueba de sub_total en carrito_stocks
+
+        /* return response()->json([
+            'message' => 'Producto actualizado en carrito correctamente',
+        ]); */
+    }
 
 
     // eliminar un producto del carrito
-    public function eliminar($stockId) {
+    public function eliminar($stockId)
+    {
         $user = Auth::user();
         $carrito = Carrito::where('user_id', $user->id)->first();
 
@@ -117,5 +79,50 @@ class CarritoController extends Controller
         }
 
         return response()->json(['message' => 'Carrito no encontrado'], 404);
+    }
+
+
+
+
+
+
+    //aumentar o disminuir la cantidad de un producto en el carrito con botones
+    public function actualizarCarrito(Request $request, $stockId)
+    {
+        $user = Auth::user();
+        $carrito = Carrito::where('user_id', $user->id)->first();
+
+        if (!$carrito) {
+            return response()->json(['message' => 'Carrito no encontrado'], 404);
+        }
+
+        $pivot = $carrito->stocks()->where('stock_id', $stockId)->first();
+
+        if (!$pivot) {
+            return response()->json(['message' => 'Producto no encontrado en carrito'], 404);
+        }
+
+        $cantidadActual = $pivot->pivot->cantidad;
+        $accion = $request->input('accion');
+
+        $nuevaCantidad = $accion === 'sumar'
+            ? $cantidadActual + 1
+            : max(1, $cantidadActual - 1); // No permitir menos de 1
+
+        // Si llega a 0, eliminar
+        if ($nuevaCantidad <= 0) {
+            $carrito->stocks()->detach($stockId);
+            return response()->json([
+                'message' => 'Producto eliminado',
+                'cantidad' => 0
+            ]);
+        }
+
+        $carrito->stocks()->updateExistingPivot($stockId, ['cantidad' => $nuevaCantidad]);
+
+        return response()->json([
+            'message' => 'Cantidad actualizada',
+            'cantidad' => $nuevaCantidad
+        ]);
     }
 }

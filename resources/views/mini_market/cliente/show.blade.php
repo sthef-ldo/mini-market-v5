@@ -70,43 +70,79 @@
 
     {{-- Script AJAX --}}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#form-user').on('submit', function(e) {
-                e.preventDefault();
-                let form = $(this);
-                $.ajax({
-                    url: '{{ route('carrito.guardar') }}',
-                    type: 'POST',
-                    data: form.serialize(),
-                    dataType: 'json',
-                    success: function(response) {
-                        alert(response.message);
-                        //limpiar campo cantidad
-                        $('#cantidad').val('');
-                        $('#errors').empty();
+   {{-- Agregar ANTES del script AJAX --}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-                        // Actualizar contador en el layout
-                        if (response.unique_count !== undefined) {
-                            $('#cart-count').text(response.unique_count);
-                        }
-                        /* console.log(response.user); */
-                    },
-                    error: function(xhr) {
-                        if (xhr.status === 422) {
-                            let errors = xhr.responseJSON.errors;
-                            let html = '<ul>';
-                            $.each(errors, function(key, value) {
-                                html += '<li>' + value[0] + '</li>';
-                            });
-                            html += '</ul>';
-                            $('#errors').html(html);
-                        } else {
-                            console.log('Error inesperado');
-                        }
+{{-- Script AJAX MODIFICADO --}}
+<script>
+    // Configurar Toast mixin
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'bottom-end',
+        showConfirmButton: false,
+        timer: 4000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+        }
+    });
+
+    $(document).ready(function() {
+        $('#form-user').on('submit', function(e) {
+            e.preventDefault();
+            let form = $(this);
+            
+            $.ajax({
+                url: '{{ route('carrito.guardar') }}',
+                type: 'POST',
+                data: form.serialize(),
+                dataType: 'json',
+                success: function(response) {
+                    // Reemplazar alert() por Toast Success
+                    Toast.fire({
+                        icon: 'success',
+                        title: response.message
+                    });
+                    
+                    // Limpiar campo cantidad
+                    $('#cantidad').val('');
+                    $('#errors').empty();
+                    $('#success').empty();
+
+                    // Actualizar contador del carrito
+                    if (response.unique_count !== undefined) {
+                        $('#cart-count').text(response.unique_count);
                     }
-                });
+                },
+                error: function(xhr) {
+                    if (xhr.status === 422) {
+                        // Errores de validación
+                        let errors = xhr.responseJSON.errors;
+                        let html = '<ul class="mt-1">';
+                        $.each(errors, function(key, value) {
+                            html += '<li class="text-sm">' + value[0] + '</li>';
+                        });
+                        html += '</ul>';
+                        
+                        Toast.fire({
+                            icon: 'error',
+                            title: '¡Corrige los errores!',
+                            html: html
+                        });
+                    } else {
+                        // Error inesperado
+                        Toast.fire({
+                            icon: 'error',
+                            title: '¡Error inesperado!',
+                            text: 'Intenta nuevamente'
+                        });
+                    }
+                }
             });
         });
-    </script>
+    });
+</script>
+
 @endsection

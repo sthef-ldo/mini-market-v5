@@ -69,7 +69,17 @@ Route::middleware('auth')->group(function () {
     // Procesar venta  
     Route::post('/procesar-venta', [VentataController::class, 'procesarVenta'])
         ->name('ventas.procesar');
+
+
+
+      // Prueba
+      // Aumentar o disminuir la cantidad de un producto en el carrito con botones
+    Route::post('/carrito/eliminar/{stockId}', [CarritoController::class, 'actualizarCarrito'])
+        ->name('carrito.actualizar');
 });
+
+
+
 
 
 
