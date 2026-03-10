@@ -1,9 +1,9 @@
 @extends('layouts.base_2')
 
 @section('buscador')
-    <form action="{{ route('catalogo.buscar_producto') }}" method="GET">
+    <form action="{{ route('catalogo.buscar_producto') }}" method="GET" >
         <flux:input kbd="⌘K" icon="magnifying-glass" placeholder="Search..." name="producto"
-        value="{{ request('producto') }}" />
+        value="{{ request('producto') }}"/>
     </form>
 @endsection
 

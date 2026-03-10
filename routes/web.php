@@ -83,6 +83,11 @@ Route::middleware('auth')->group(function () {
 
 
 
+//buscar producto en catalogo
+Route::get('buscar', [CatalogoController::class, 'buscar_producto'])
+    ->name('catalogo.buscar_producto');
+
+
 
 
 

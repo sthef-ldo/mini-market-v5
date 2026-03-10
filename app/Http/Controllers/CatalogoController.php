@@ -17,4 +17,11 @@ class CatalogoController extends Controller
         $stock = Stock::findOrFail($stock);
         return view('mini_market.cliente.show', compact('stock'));
     }
+
+    public function buscar_producto(Request $request) {
+        $query = $request->input('producto');
+        $stocks = Stock::where('nombre', 'like', '%' . $query . '%')->get();
+        return view('mini_market.cliente.buscar_producto', compact('stocks'));
+    }
+
 }

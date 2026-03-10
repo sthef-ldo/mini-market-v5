@@ -77,7 +77,7 @@ class CarritoController extends Controller
             $carrito->stocks()->detach($stockId);
             return response()->json(['message' => 'Producto eliminado del carrito']);
         }
-
+        
         return response()->json(['message' => 'Carrito no encontrado'], 404);
     }
 
